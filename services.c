@@ -285,7 +285,7 @@ static int create_subproc_thread(const char *name)
 int service_to_fd(const char *name)
 {
     int ret = -1;
-    //printf("%s\n", name);
+    fprintf(stderr, "service_to_fd: %s\n", name);
 
     if(!strncmp(name, "tcp:", 4)) {
         int port = atoi(name + 4);
@@ -309,8 +309,15 @@ int service_to_fd(const char *name)
         ret = socket_local_client(name + 14,
                 ANDROID_SOCKET_NAMESPACE_RESERVED, SOCK_STREAM);
     } else if(!strncmp(name, "localabstract:", 14)) {
-        ret = socket_local_client(name + 14,
+        const char *socket_name = name + 14;
+        fprintf(stderr, "service_to_fd: connecting to abstract socket '%s'\n", socket_name);
+        ret = socket_local_client(socket_name,
                 ANDROID_SOCKET_NAMESPACE_ABSTRACT, SOCK_STREAM);
+        if (ret < 0) {
+            fprintf(stderr, "service_to_fd: socket_local_client failed: %s\n", strerror(errno));
+        } else {
+            fprintf(stderr, "service_to_fd: connected to '%s' fd=%d\n", socket_name, ret);
+        }
     } else if(!strncmp(name, "localfilesystem:", 16)) {
         ret = socket_local_client(name + 16,
                 ANDROID_SOCKET_NAMESPACE_FILESYSTEM, SOCK_STREAM);

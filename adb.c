@@ -501,6 +501,8 @@ void handle_packet(apacket *p, atransport *t)
 
     case A_CNXN: /* CONNECT(version, maxdata, "system-id-string") */
             /* XXX verify version, etc */
+        fprintf(stderr, "handle_packet: A_CNXN version=0x%08x banner=%s\n",
+                p->msg.arg0, (char *)p->data);
         if(t->connection_state != CS_OFFLINE) {
             t->connection_state = CS_OFFLINE;
             handle_offline(t);
@@ -523,6 +525,8 @@ void handle_packet(apacket *p, atransport *t)
         if (t->online) {
             char *name = (char*) p->data;
             name[p->msg.data_length > 0 ? p->msg.data_length - 1 : 0] = 0;
+            fprintf(stderr, "handle_packet: A_OPEN id=%u destination=%s\n",
+                    p->msg.arg0, name);
             s = create_local_service_socket(name);
             if(s == 0) {
                 send_close(0, p->msg.arg0, t);

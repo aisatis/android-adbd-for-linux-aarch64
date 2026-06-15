@@ -1,11 +1,7 @@
 # android-adbd-for-linux
 
-This mini adb daemon can compile and run on GNU/Linux or Embedded Linux system without any dependency.
+Diff with [original version](https://github.com/ajiang17/android-adbd-for-linux)
 
-Base on aosp kitkat-release code.
-
-You can use `adb shell p:` cmd for private service with google standard adb client 
-```
-adb shell p: Hello World
-```
-
+1. add aarch64 support.
+2. add fake adb root support.
+3. add localabstract support.
