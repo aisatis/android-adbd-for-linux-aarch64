@@ -1,3 +1,4 @@
+// edited by holyice with AI 
 /*
  * Copyright (C) 2007 The Android Open Source Project
  *
@@ -18,6 +19,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdint.h>
+#include <endian.h>
 
 #include <linux/usb/ch9.h>
 #include <linux/usb/functionfs.h>
@@ -34,8 +37,13 @@
 #define MAX_PACKET_SIZE_FS	64
 #define MAX_PACKET_SIZE_HS	512
 
-#define cpu_to_le16(x)  htole16(x)
-#define cpu_to_le32(x)  htole32(x)
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+#define cpu_to_le16(x) ((__le16)(uint16_t)(x))
+#define cpu_to_le32(x) ((__le32)(uint32_t)(x))
+#else
+#define cpu_to_le16(x) ((__le16)__builtin_bswap16(x))
+#define cpu_to_le32(x) ((__le32)__builtin_bswap32(x))
+#endif
 
 struct usb_handle
 {
