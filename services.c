@@ -1,3 +1,4 @@
+// accept adb root with do nothing.
 /*
  * Copyright (C) 2007 The Android Open Source Project
  *
@@ -61,6 +62,10 @@ void *service_bootstrap_func(void *x)
 
 void restart_root_service(int fd, void *cookie)
 {
+    char buf[100];
+    snprintf(buf, sizeof(buf), "adbd is already running as root\n");
+    writex(fd, buf, strlen(buf));
+    adb_close(fd);
 }
 
 void restart_tcp_service(int fd, void *cookie)
